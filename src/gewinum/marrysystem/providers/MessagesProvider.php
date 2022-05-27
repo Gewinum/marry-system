@@ -21,7 +21,7 @@ class MessagesProvider
 
     public function getMessage(string $key, bool $withPrefix = true): string
     {
-        return $withPrefix ? $this->messages->getNested("PluginPrefix") : "" . $this->messages->getNested($key);
+        return ($withPrefix ? $this->messages->getNested("PluginPrefix") : "") . $this->messages->getNested($key);
     }
 
     private function getDefaults(): array
