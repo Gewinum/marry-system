@@ -235,7 +235,7 @@ class MarryCommand extends Command
         $targetName = $family->members[0] === $player->getName() ? $family->members[1] : $family->members[0];
 
         $message = str_replace("{name}", $targetName, $message);
-        $message = str_replace("{hasHome}", $family->homePosition !== null ? "Есть" : "Нет", $message);
+        $message = str_replace("{hasHome}", $family->homePosition !== null ? "Yes" : "No", $message);
 
         $player->sendMessage($message);
 
