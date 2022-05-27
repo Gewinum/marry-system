@@ -1,0 +1,6 @@
+name: MarrySystem
+author: Gewinum
+description: Сделано от души, от https://vk.com/gewinum
+version: 1.0
+api: [4.0.0]
+main: gewinum\marrysystem\MarrySystem
