@@ -1,11 +1,11 @@
 <?php
 
-namespace gewinum\marrysystem\dataProviders;
+namespace gewinum\marrysystem\providers;
 
 use gewinum\marrysystem\MarrySystem;
 use pocketmine\utils\Config;
 
-class MessagesDataProvider
+class MessagesProvider
 {
     private Config $messages;
 
@@ -21,7 +21,7 @@ class MessagesDataProvider
 
     public function getMessage(string $key, bool $withPrefix = true): string
     {
-        return $this->messages->getNested("PluginPrefix") . $this->messages->getNested($key);
+        return $withPrefix ? $this->messages->getNested("PluginPrefix") : "" . $this->messages->getNested($key);
     }
 
     private function getDefaults(): array

@@ -1,13 +1,13 @@
 <?php
 
-namespace gewinum\marrysystem\dataProviders;
+namespace gewinum\marrysystem\providers;
 
 use gewinum\marrysystem\dataSchemes\Family;
 use gewinum\marrysystem\dataSchemes\Position;
 use gewinum\marrysystem\MarrySystem;
 use pocketmine\utils\Config;
 
-class FamiliesDataProvider
+class FamiliesProvider
 {
     private Config $families;
 
