@@ -3,8 +3,8 @@
 namespace gewinum\marrysystem\commands;
 
 use gewinum\marrysystem\constants\MarryConstants;
-use gewinum\marrysystem\dataProviders\FamiliesDataProvider;
-use gewinum\marrysystem\dataProviders\MessagesDataProvider;
+use gewinum\marrysystem\providers\FamiliesProvider;
+use gewinum\marrysystem\providers\MessagesProvider;
 use gewinum\marrysystem\dataSchemes\MarryRequest;
 use gewinum\marrysystem\dataSchemes\Position;
 use gewinum\marrysystem\MarryRequests;
@@ -91,12 +91,12 @@ class MarryCommand extends Command
 
         $marryRequests = MarryRequests::getInstance();
 
-        if ($this->getFamiliesDataProvider()->getPlayerFamily($player->getName()) !== null) {
+        if ($this->getFamiliesProvider()->getPlayerFamily($player->getName()) !== null) {
             $player->sendMessage($this->getMessage("AlreadyMarried"));
             return;
         }
 
-        if ($this->getFamiliesDataProvider()->getPlayerFamily($target->getName()) !== null) {
+        if ($this->getFamiliesProvider()->getPlayerFamily($target->getName()) !== null) {
             $player->sendMessage($this->getMessage("TargetAlreadyMarried"));
             return;
         }
@@ -140,14 +140,14 @@ class MarryCommand extends Command
 
     private function divorce(Player $player)
     {
-        $family = $this->getFamiliesDataProvider()->getPlayerFamily($player->getName());
+        $family = $this->getFamiliesProvider()->getPlayerFamily($player->getName());
 
         if ($family === null) {
             $player->sendMessage($this->getMessage("NotMarried"));
             return;
         }
 
-        $this->getFamiliesDataProvider()->removeFamily($family);
+        $this->getFamiliesProvider()->removeFamily($family);
 
         $targetName = $family->members[0] === $player->getName() ? $family->members[1] : $family->members[0];
 
@@ -165,7 +165,7 @@ class MarryCommand extends Command
 
     private function accept(Player $player)
     {
-        if ($this->getFamiliesDataProvider()->getPlayerFamily($player->getName()) !== null) {
+        if ($this->getFamiliesProvider()->getPlayerFamily($player->getName()) !== null) {
             $player->sendMessage($this->getMessage("AlreadyMarried"));
             return;
         }
@@ -179,7 +179,7 @@ class MarryCommand extends Command
             return;
         }
 
-        $this->getFamiliesDataProvider()->createFamily($player->getName(), $marryRequest->requester->getName());
+        $this->getFamiliesProvider()->createFamily($player->getName(), $marryRequest->requester->getName());
 
         $successRecipientNotification = $this->getMessage("SuccessRecipientNotification");
         $successRecipientNotification = str_replace("{name}", $marryRequest->requester->getName(), $successRecipientNotification);
@@ -195,7 +195,7 @@ class MarryCommand extends Command
 
     private function deny(Player $player)
     {
-        if ($this->getFamiliesDataProvider()->getPlayerFamily($player->getName()) !== null) {
+        if ($this->getFamiliesProvider()->getPlayerFamily($player->getName()) !== null) {
             $player->sendMessage($this->getMessage("AlreadyMarried"));
             return;
         }
@@ -223,7 +223,7 @@ class MarryCommand extends Command
 
     private function info(Player $player)
     {
-        $family = $this->getFamiliesDataProvider()->getPlayerFamily($player->getName());
+        $family = $this->getFamiliesProvider()->getPlayerFamily($player->getName());
 
         if ($family === null) {
             $player->sendMessage($this->getMessage("NotMarried"));
@@ -252,7 +252,7 @@ class MarryCommand extends Command
 
     private function kissPartner(Player $player)
     {
-        $family = $this->getFamiliesDataProvider()->getPlayerFamily($player->getName());
+        $family = $this->getFamiliesProvider()->getPlayerFamily($player->getName());
 
         if ($family === null) {
             $player->sendMessage($this->getMessage("NotMarried"));
@@ -305,7 +305,7 @@ class MarryCommand extends Command
 
     private function teleportToPartner(Player $player)
     {
-        $family = $this->getFamiliesDataProvider()->getPlayerFamily($player->getName());
+        $family = $this->getFamiliesProvider()->getPlayerFamily($player->getName());
 
         if ($family === null) {
             $player->sendMessage($this->getMessage("NotMarried"));
@@ -329,7 +329,7 @@ class MarryCommand extends Command
 
     private function teleportToHome(Player $player)
     {
-        $family = $this->getFamiliesDataProvider()->getPlayerFamily($player->getName());
+        $family = $this->getFamiliesProvider()->getPlayerFamily($player->getName());
 
         if ($family === null) {
             $player->sendMessage($this->getMessage("NotMarried"));
@@ -361,7 +361,7 @@ class MarryCommand extends Command
 
     private function setHome(Player $player)
     {
-        $family = $this->getFamiliesDataProvider()->getPlayerFamily($player->getName());
+        $family = $this->getFamiliesProvider()->getPlayerFamily($player->getName());
 
         if ($family === null) {
             $player->sendMessage($this->getMessage("NotMarried"));
@@ -374,7 +374,7 @@ class MarryCommand extends Command
         $family->homePosition->z = $player->getPosition()->getFloorZ();
         $family->homePosition->world = $player->getPosition()->getWorld()->getDisplayName();
 
-        $this->getFamiliesDataProvider()->updateFamily($family);
+        $this->getFamiliesProvider()->updateFamily($family);
 
         $player->sendMessage($this->getMessage("HomeSet"));
     }
@@ -384,18 +384,18 @@ class MarryCommand extends Command
         return MarrySystem::getInstance();
     }
 
-    private function getFamiliesDataProvider(): FamiliesDataProvider
+    private function getFamiliesProvider(): FamiliesProvider
     {
-        return $this->getSystem()->getFamiliesDataProvider();
+        return $this->getSystem()->getFamiliesProvider();
     }
 
-    private function getMessagesDataProvider(): MessagesDataProvider
+    private function getMessagesProvider(): MessagesProvider
     {
-        return $this->getSystem()->getMessagesDataProvider();
+        return $this->getSystem()->getMessagesProvider();
     }
 
     private function getMessage(string $key, bool $withPrefix = true): string
     {
-        return $this->getMessagesDataProvider()->getMessage($key, $withPrefix);
+        return $this->getMessagesProvider()->getMessage($key, $withPrefix);
     }
 }

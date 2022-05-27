@@ -2,9 +2,9 @@
 
 namespace gewinum\marrysystem;
 
-use gewinum\marrysystem\dataProviders\FamiliesDataProvider;
-use gewinum\marrysystem\dataProviders\MessagesDataProvider;
 use gewinum\marrysystem\commands\MarryCommand;
+use gewinum\marrysystem\providers\FamiliesProvider;
+use gewinum\marrysystem\providers\MessagesProvider;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -16,8 +16,8 @@ class MarrySystem extends PluginBase implements Listener
 {
     private static self $_instance;
 
-    private FamiliesDataProvider $familiesDataProvider;
-    private MessagesDataProvider $messagesDataProvider;
+    private FamiliesProvider $familiesProvider;
+    private MessagesProvider $messagesProvider;
 
     public function onEnable(): void
     {
@@ -25,10 +25,10 @@ class MarrySystem extends PluginBase implements Listener
 
         @mkdir($this->getDataFolder());
 
-        $this->familiesDataProvider = new FamiliesDataProvider;
-        $this->messagesDataProvider = new MessagesDataProvider;
+        $this->familiesProvider = new FamiliesProvider;
+        $this->messagesProvider = new MessagesProvider;
 
-        $command = new MarryCommand("marry", "Система свадьб", "/marry help");
+        $command = new MarryCommand("marry", "Weddings system", "/marry help");
 
         $this->getServer()->getCommandMap()->register("marry", $command);
 
@@ -40,14 +40,14 @@ class MarrySystem extends PluginBase implements Listener
         return self::$_instance;
     }
 
-    public function getFamiliesDataProvider(): FamiliesDataProvider
+    public function getFamiliesProvider(): FamiliesProvider
     {
-        return $this->familiesDataProvider;
+        return $this->familiesProvider;
     }
 
-    public function getMessagesDataProvider(): MessagesDataProvider
+    public function getMessagesProvider(): MessagesProvider
     {
-        return $this->messagesDataProvider;
+        return $this->messagesProvider;
     }
 
     /**
@@ -55,7 +55,7 @@ class MarrySystem extends PluginBase implements Listener
      */
     public function onPlayerChat(PlayerChatEvent $event)
     {
-        if ($this->getFamiliesDataProvider()->getPlayerFamily($event->getPlayer()->getName()) === null) {
+        if ($this->getFamiliesProvider()->getPlayerFamily($event->getPlayer()->getName()) === null) {
             return;
         }
 
